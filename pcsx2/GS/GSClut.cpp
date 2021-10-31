@@ -315,8 +315,7 @@ void GSClut::Read32(const GIFRegTEX0& TEX0, const GIFRegTEXA& TEXA)
 			{
 				case PSM_PSMT8:
 				case PSM_PSMT8H:
-					clut += (TEX0.CSA & 15) << 4; // disney golf title screen
-					ReadCLUT_T32_I8(clut, m_buff32);
+					ReadCLUT_T32_I8(clut, m_buff32, (TEX0.CSA & 15) << 4);
 					break;
 				case PSM_PSMT4:
 				case PSM_PSMT4HL:
@@ -508,11 +507,11 @@ __forceinline void GSClut::WriteCLUT_T16_I4_CSM1(const uint16* RESTRICT src, uin
 	}
 }
 
-void GSClut::ReadCLUT_T32_I8(const uint16* RESTRICT clut, uint32* RESTRICT dst)
+void GSClut::ReadCLUT_T32_I8(const uint16* RESTRICT clut, uint32* RESTRICT dst, int offset)
 {
 	for (int i = 0; i < 256; i += 16)
 	{
-		ReadCLUT_T32_I4(&clut[i], &dst[i]);
+		ReadCLUT_T32_I4(&clut[(i + offset) & 0xFF], &dst[i]);
 	}
 }
 
